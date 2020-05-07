@@ -1,4 +1,9 @@
 "use strict"
+var tbody = document.querySelector('#coffees');
+var submitButton = document.querySelector('#submit');
+var roastSelection = document.querySelector('#roast-selection');
+var coffeeName = document.querySelector('#coffee-name');
+
 
 function renderCoffee(coffee) {
     var html = '<div class="coffee">';
@@ -13,45 +18,53 @@ function renderCoffee(coffee) {
     //
     return html;
 }
-
+function autoFill() {
+    coffeeName = document.querySelector('#coffee-name');
+    console.log(coffeeName.value);
+    updateCoffees();
+}
+function changeRoast() {
+    roastSelection = document.querySelector('#roast-selection');
+    updateCoffees();
+}
 function renderCoffees(coffees) {
     var html = '';
     for(var i = 0; i < coffees.length; i += 1) {
-            html += renderCoffee(coffees[i]);
-        }
+        html += renderCoffee(coffees[i]);
+    }
     // for(var i = coffees.length - 1; i >= 0; i--) {
     //     html += renderCoffee(coffees[i]);
     // }
     return html;
 }
-
-function updateCoffees(e) {
-    e.preventDefault(); // don't submit the form, we just want to update the data
-    var input, filter, tr, th, i, txtValue;
-    input = document.getElementById("#coffee-name");
-    filter = input.value.toUpperCase();
-    tr = document.getElementById("#myTr");
-    th = th.getElementsByTagName("th");
+function updateCoffees() {
+    //e.preventDefault(); // don't submit the form, we just want to update the data
+    // var input, filter, tr, th, i, txtValue;
+    // input = document.getElementById("#coffee-name");
+    // filter = input.value.toUpperCase();
+    // tr = document.getElementById("#myTr");
+    // th = th.getElementsByTagName("th");
     var selectedRoast = roastSelection.value;
     var filteredCoffees = [];
     var selectedName = coffeeName.value;
     coffees.forEach(function(coffee) {
-        if (coffee.roast === selectedRoast) {
-            for (i = 0; i < th.length; i++) {
-                // a = th[i].getElementsByTagName("a")[0];
-                // txtValue = a.textContent || a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    th[i].style.display = "";
-                } else {
-                    th[i].style.display = "none";
-                }
-            }
+        let coffeeLower = coffee.name.toLowerCase();
+        let inputLower = selectedName.toLowerCase();
+        if (coffee.roast === selectedRoast && coffeeLower.includes(inputLower)) {
+            // for (i = 0; i < th.length; i++) {
+            //     th = th[i].getElementsByTagName("a")[0];
+            //     txtValue = th.textContent || th.innerText;
+            //     if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            //         th[i].style.display = "";
+            //     } else {
+            //         th[i].style.display = "none";
+            //     }
+            // }
             filteredCoffees.push(coffee);
         }
     });
     tbody.innerHTML = renderCoffees(filteredCoffees);
 }
-
 // from http://www.ncausa.org/About-Coffee/Coffee-Roasts-Guide
 var coffees = [
     {id: 1, name: 'Light City', roast: 'light'},
@@ -70,11 +83,5 @@ var coffees = [
     {id: 14, name: 'French', roast: 'dark'},
 ];
 
-var tbody = document.querySelector('#coffees');
-var submitButton = document.querySelector('#submit');
-var roastSelection = document.querySelector('#roast-selection');
-var coffeeName = document.querySelector('#coffee-name')
-
 tbody.innerHTML = renderCoffees(coffees);
-
 submitButton.addEventListener('click', updateCoffees);
